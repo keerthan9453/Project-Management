@@ -2,12 +2,22 @@ import Sidebar from "./components/Sidebar";
 import Newproject from "./components/Newproject";
 import NoProject from "./components/NoProject";
 import { useState } from "react";
+import SelectedProject from "./components/SelectedProject";
 
 function App() {
   const[projectSelected, setSelectedProject] = useState({
     projects: [],
     selectedProjectId: undefined
   })
+
+  function handleProjectSelect(projectId) {
+    setSelectedProject(prevState => {
+      return {
+        ...prevState,
+        selectedProjectId: projectId, // Reset to indicate no project is selected
+      };
+    });
+  }
   function handleClose(){
     setSelectedProject(prevState => {
       return {
@@ -26,6 +36,19 @@ function App() {
     })
   }
 
+  function handleDeleteProject(projectId) {
+    setSelectedProject(prevState => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: projectSelected.projects.filter(
+          project=> project.id !== prevState.selectedProjectId
+        )
+        // Reset to indicate no project is selected
+      };
+    });
+  }
+
   function handleAddProject(projectData) {
     setSelectedProject(prevState => {
       const newProject={
@@ -42,7 +65,12 @@ function App() {
   }
   console.log(projectSelected);
 
-  let content;
+  const selectedProject = projectSelected.projects.find(
+    (project) => project.id === projectSelected.selectedProjectId
+  );
+
+  let content = <SelectedProject project={selectedProject} onDelete={handleDeleteProject}/>;
+  
 
   if (projectSelected.selectedProjectId === null) {
     content = <Newproject onAddProject={handleAddProject} onCancel={handleClose} />;
@@ -53,7 +81,9 @@ function App() {
 
   return(
     <main className="flex gap-8 h-screen">
-      <Sidebar onStartProject={handleStartProject} projects={projectSelected.projects}/>
+      <Sidebar onStartProject={handleStartProject} projects={projectSelected.projects}
+      onSelectProject={handleProjectSelect}
+      />
       {content}
     </main>
   );
