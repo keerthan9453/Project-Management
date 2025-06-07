@@ -12,15 +12,17 @@ export default function Sidebar({onStartProject, projects, onSelectProject, sele
                 {projects.map((project) => {
                     let cssStyle = "w-full text-left px-4 py-2 rounded-md my-1  bg-stone-800 hover:bg-stone-700"
                     if(project.id === selectedProjectId) {
-                        cssStyle += " text-stone-600 bg-stone-700"
+                        cssStyle += " text-stone-400 bg-stone-800"
                     }
                     else{
-                        cssStyle += " text-stone-400"
+                        cssStyle += " text-stone-600"
                     }
                     return (
                         <li key={project.id} className={cssStyle}>
-                            <button onClick={()=>onSelectProject(project.id)}
-                                className="w-full h-full ">
+                            <button 
+                            className="w-full text-center"
+                            
+                            onClick={()=>onSelectProject(project.id)}>
                                 {project.title}
                             </button>
                         </li>
